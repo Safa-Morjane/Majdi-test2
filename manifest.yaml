@@ -2,27 +2,31 @@ kind: AIchorManifest
 apiVersion: 0.2.2
 
 builder:
-  image: image
-  dockerfile: ./build/Dockerfile
-  context: .
+ image: image
+ dockerfile: ./build/ray.Dockerfile
+ context: .
 
 spec:
-  operator: jax
-  image: image
-  command: "python3 -u main.py --operator=jax --sleep=300 --tb-write=True"                                           
-  tensorboard: # optional, disabled by default
-    enabled: true
+ operator: kuberay
+ image: image
+ command: "python3 -u main.py --operator=kuberay --sleep=1800 --tb-write=True"
+ activeDeadlineSeconds: 1600
+ debug:
+  jupyter: false
 
-  timeout: "1w 1d 2h 10m 5s" # optional, in weeks (w), days (d), hours (h), minutes (m) and seconds (s)
-  types:
-    worker:
-      count: 1
-      resources:
-        cpus: 1
-        ramRatio: 2 
-        shmSizeGB: 0
-        accelerators: # optional
-          gpu:
-            count: 0
-            type: gpu
-            product: nvidia-tesla-t4 
+ tensorboard:
+  enabled: true
+
+ types:
+  Head:
+   resources:
+    cpus: 1
+    ramRatio: 2
+
+  Workers:
+   - name: cpu-workers
+    count: 1
+    resources:
+     cpus: 1
+     ramRatio: 2
+     shmSizeGB: 0
