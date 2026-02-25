@@ -2,31 +2,31 @@ kind: AIchorManifest
 apiVersion: 0.2.2
 
 builder:
- image: image
- dockerfile: ./build/ray.Dockerfile
- context: .
+  image: image
+  dockerfile: ./build/ray.Dockerfile
+  context: .
 
 spec:
- operator: kuberay
- image: image
- command: "python3 -u main.py --operator=kuberay --sleep=1800 --tb-write=True" 
- activeDeadlineSeconds: 1600
- debug:
-  jupyter: false
+  operator: kuberay
+  image: image
+  command: "python3 -u main.py --operator=kuberay --sleep=1800 --tb-write=True"
+  activeDeadlineSeconds: 1600
+  debug:
+    jupyter: false
 
- tensorboard:
-  enabled: true
+  tensorboard:
+    enabled: true
 
- types:
-  Head:
-   resources:
-    cpus: 1
-    ramRatio: 2
+  types:
+    Head:
+      resources:
+        cpus: 1
+        ramRatio: 2
 
-  Workers:
-   - name: cpu-workers
-    count: 1
-    resources:
-     cpus: 1
-     ramRatio: 2
-     shmSizeGB: 0
+    Workers:
+      - name: cpu-workers
+        count: 1
+        resources:
+          cpus: 1
+          ramRatio: 2
+          shmSizeGB: 0
